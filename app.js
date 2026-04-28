@@ -360,11 +360,6 @@ function initFormSubmit() {
       return;
     }
 
-    if (!capturedImage) {
-      showToast('warning', 'Please capture or attach photo evidence.');
-      return;
-    }
-
     // Build structured JSON report (Section 2)
     const report = {
       id: generateId(),
