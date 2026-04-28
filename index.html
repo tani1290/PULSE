@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>PULSE — Crisis Intelligence</title>
+  <meta name="description" content="PULSE Community Crisis Intelligence Network — Report, relay, and respond to emergencies even without connectivity." />
+  <meta name="theme-color" content="#0a0c14" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- CRISIS MODE BANNER (Section 5)                          -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <div id="crisis-banner" class="crisis-banner">
+    <span class="crisis-banner-icon">⚡</span>
+    <span class="crisis-banner-text">Crisis Mode Active — Low Connectivity Optimizations Enabled</span>
+    <span class="crisis-banner-dot"></span>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- APP SHELL                                               -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <div class="app-shell">
+
+    <!-- ─── APP HEADER ─── -->
+    <header class="app-header">
+      <div class="header-brand">
+        <div class="brand-mark">
+          <span class="material-icons-round">sensors</span>
+        </div>
+        <div>
+          <h1 class="brand-name">PULSE</h1>
+          <p class="brand-tagline">Crisis Intelligence Network</p>
+        </div>
+      </div>
+      <div class="header-status">
+        <div class="connectivity-chip" id="connectivity-chip">
+          <span class="material-icons-round" id="connectivity-icon">wifi_off</span>
+          <span id="connectivity-label">Offline</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- ─── TAB BAR ─── -->
+    <nav class="tab-bar">
+      <button class="tab active" data-tab="report" id="tab-report">
+        <span class="material-icons-round">edit_note</span>
+        <span>Report</span>
+      </button>
+      <button class="tab" data-tab="feed" id="tab-feed">
+        <span class="material-icons-round">list_alt</span>
+        <span>Reports</span>
+        <span class="tab-badge" id="tab-badge" style="display:none">0</span>
+      </button>
+      <button class="tab" data-tab="dashboard" id="tab-dashboard">
+        <span class="material-icons-round">admin_panel_settings</span>
+        <span>Command</span>
+      </button>
+    </nav>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- TAB PANEL: REPORT CREATION (Sections 1 & 2)            -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <main class="tab-panel active" id="panel-report">
+      <div class="panel-scroll">
+
+        <div class="section-title">
+          <span class="material-icons-round">campaign</span>
+          <h2>Report an Incident</h2>
+        </div>
+        <p class="section-desc">Your report is stored locally and will sync when connectivity is available.</p>
+
+        <form id="report-form" class="report-form" autocomplete="off">
+
+          <!-- Incident Type Selector -->
+          <fieldset class="form-field">
+            <legend class="field-label">Incident Type</legend>
+            <div class="type-grid" id="type-grid">
+              <button type="button" class="type-chip" data-type="fire">
+                <span class="type-icon">🔥</span><span>Fire</span>
+              </button>
+              <button type="button" class="type-chip" data-type="flood">
+                <span class="type-icon">🌊</span><span>Flood</span>
+              </button>
+              <button type="button" class="type-chip" data-type="collapse">
+                <span class="type-icon">🏚️</span><span>Collapse</span>
+              </button>
+              <button type="button" class="type-chip" data-type="medical">
+                <span class="type-icon">🏥</span><span>Medical</span>
+              </button>
+              <button type="button" class="type-chip" data-type="conflict">
+                <span class="type-icon">⚠️</span><span>Conflict</span>
+              </button>
+              <button type="button" class="type-chip" data-type="other">
+                <span class="type-icon">📋</span><span>Other</span>
+              </button>
+            </div>
+            <input type="hidden" id="incident-type" value="" />
+          </fieldset>
+
+          <!-- Description -->
+          <div class="form-field">
+            <label class="field-label" for="description">Describe what you see</label>
+            <textarea id="description" class="field-textarea" rows="4"
+              placeholder="e.g. Building partially collapsed on main road. Approximately 10 people trapped. Dust cloud visible."
+              maxlength="500" required></textarea>
+            <div class="field-meta">
+              <span id="char-counter">0</span>/500
+            </div>
+          </div>
+
+          <!-- Location -->
+          <div class="form-field">
+            <label class="field-label" for="location">Location</label>
+            <div class="field-row">
+              <input type="text" id="location" class="field-input" placeholder="e.g. MG Road, Sector 14, Gurugram" required />
+              <button type="button" class="btn-locate" id="btn-locate" title="Auto-detect location">
+                <span class="material-icons-round">my_location</span>
+              </button>
+            </div>
+            <div class="geo-tag" id="geo-tag" style="display:none">
+              <span class="material-icons-round">pin_drop</span>
+              <span id="geo-tag-text"></span>
+            </div>
+          </div>
+
+          <!-- Image Upload -->
+          <div class="form-field">
+            <label class="field-label">Photo Evidence <span class="optional-tag">Optional</span></label>
+            <div class="upload-zone" id="upload-zone">
+              <input type="file" id="file-input" accept="image/*" capture="environment" hidden />
+              <span class="material-icons-round upload-icon">add_a_photo</span>
+              <span class="upload-text">Tap to capture or select image</span>
+            </div>
+            <div class="image-preview" id="image-preview" style="display:none">
+              <img id="preview-img" src="" alt="Preview" />
+              <button type="button" class="preview-remove" id="preview-remove">
+                <span class="material-icons-round">close</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Submit -->
+          <button type="submit" class="btn-submit" id="btn-submit">
+            <span class="material-icons-round">offline_bolt</span>
+            <span>Save Report Locally</span>
+          </button>
+          <p class="submit-note">Report will be saved to device storage immediately.</p>
+        </form>
+      </div>
+    </main>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- TAB PANEL: REPORT LIST (Sections 3, 4, 6)              -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <main class="tab-panel" id="panel-feed">
+      <div class="panel-scroll">
+
+        <div class="section-title">
+          <span class="material-icons-round">fact_check</span>
+          <h2>All Reports</h2>
+        </div>
+        <p class="section-desc" id="feed-summary">No reports yet. Submit one from the Report tab.</p>
+
+        <!-- Lifecycle Legend -->
+        <div class="lifecycle-legend">
+          <div class="legend-item">
+            <span class="legend-dot" style="background:#6b7280"></span>
+            <span>Offline</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot" style="background:#f59e0b"></span>
+            <span>Relayed</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot" style="background:#10b981"></span>
+            <span>Synced</span>
+          </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <!-- SIMULATED PEER RELAY PANEL                              -->
+        <!-- ═══════════════════════════════════════════════════════ -->
+        <div class="relay-panel">
+          <div class="relay-panel-header">
+            <div class="relay-panel-title">
+              <span class="material-icons-round">cell_tower</span>
+              <div>
+                <h3>Simulated Peer Relay Layer</h3>
+                <span class="relay-panel-tag">Prototype</span>
+              </div>
+            </div>
+            <button class="btn-relay" id="btn-relay" disabled>
+              <span class="material-icons-round">send</span>
+              <span>Simulate Peer Relay</span>
+            </button>
+          </div>
+          <div class="relay-console" id="relay-console">
+            <div class="relay-line relay-muted">
+              <span class="relay-prompt">$</span> Relay engine idle. Submit reports to enable relay simulation.
+            </div>
+          </div>
+        </div>
+
+        <!-- Report Cards Container -->
+        <div id="report-list" class="report-list"></div>
+
+      </div>
+    </main>
+
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <!-- TAB PANEL: EMERGENCY OPERATIONS DASHBOARD (Section 7)  -->
+    <!-- ═══════════════════════════════════════════════════════ -->
+    <main class="tab-panel" id="panel-dashboard">
+      <div class="panel-scroll dashboard-scroll">
+
+        <!-- Header Insight Dashboard Banner -->
+        <div class="insight-banner">
+          <div class="insight-stat-card">
+            <span class="stat-icon red-glow material-icons-round">emergency</span>
+            <div class="stat-meta">
+              <span class="stat-label">Critical Incidents</span>
+              <span class="stat-value" id="dash-critical-count">0</span>
+            </div>
+          </div>
+          <div class="insight-stat-card">
+            <span class="stat-icon blue-glow material-icons-round">sync_saved_locally</span>
+            <div class="stat-meta">
+              <span class="stat-label">Total Synced</span>
+              <span class="stat-value" id="dash-synced-count">0</span>
+            </div>
+          </div>
+          <div class="insight-stat-card">
+            <span class="stat-icon green-glow material-icons-round">update</span>
+            <div class="stat-meta">
+              <span class="stat-label">Telemetry Update</span>
+              <span class="stat-value" id="dash-last-update">--:--</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section Intro -->
+        <div class="section-title">
+          <span class="material-icons-round">analytics</span>
+          <h2>Crisis Intelligence Dashboard</h2>
+        </div>
+        <p class="section-desc">Real-time situational intelligence optimized for responder routing.</p>
+
+        <!-- Dispatch Recommendation Feed -->
+        <div class="dispatch-recommendation-container" id="dispatch-feed-container">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Optional Map Plot Container -->
+        <div class="simulated-map-container">
+          <div class="map-overlay">
+            <span class="material-icons-round">gps_fixed</span>
+            <span>SIMULATED INCIDENT PLOTTING MATRIX</span>
+          </div>
+          <div class="map-grid" id="simulated-map-grid">
+            <!-- Simulated beacon markers dropped by JS -->
+          </div>
+        </div>
+
+        <!-- Responder Filtered Card Listing -->
+        <div class="dashboard-listing-container" id="dash-incident-feed">
+          <!-- Populated by JS -->
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- TOAST CONTAINER                                         -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
