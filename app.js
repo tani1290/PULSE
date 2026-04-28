@@ -101,6 +101,7 @@ function showToast(type, message) {
 // ─────────────────────────────────────────────────────────────────
 
 document.addEventListener('DOMContentLoaded', () => {
+  initAuth();
   initTabs();
   initTypeSelector();
   initCharCounter();
@@ -116,6 +117,41 @@ document.addEventListener('DOMContentLoaded', () => {
   // Refresh relative timestamps every 30s
   setInterval(() => renderReportList(), 30000);
 });
+
+// ─────────────────────────────────────────────────────────────────
+// AUTHENTICATION
+// ─────────────────────────────────────────────────────────────────
+
+function initAuth() {
+  const loginTab = document.getElementById('auth-tab-login');
+  const regTab = document.getElementById('auth-tab-register');
+  const loginForm = document.getElementById('login-form');
+  const regForm = document.getElementById('register-form');
+
+  loginTab.addEventListener('click', () => {
+    loginTab.classList.add('active');
+    regTab.classList.remove('active');
+    loginForm.classList.add('active-form');
+    regForm.classList.remove('active-form');
+  });
+
+  regTab.addEventListener('click', () => {
+    regTab.classList.add('active');
+    loginTab.classList.remove('active');
+    regForm.classList.add('active-form');
+    loginForm.classList.remove('active-form');
+  });
+
+  const handleAuth = (e) => {
+    e.preventDefault();
+    document.getElementById('auth-shell').style.display = 'none';
+    document.getElementById('app-shell').style.display = 'flex';
+    showToast('success', 'Authentication successful');
+  };
+
+  loginForm.addEventListener('submit', handleAuth);
+  regForm.addEventListener('submit', handleAuth);
+}
 
 // ─────────────────────────────────────────────────────────────────
 // TAB NAVIGATION
